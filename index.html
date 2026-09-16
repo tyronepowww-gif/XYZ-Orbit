@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Kai Training</title>
+
+  <style>
+    :root {
+      --bg: #07162d;
+      --panel: #102649;
+      --panel-light: #17355f;
+      --text: #f4f8ff;
+      --muted: #b8c9e6;
+      --gold: #ffd44d;
+      --blue: #36a9ff;
+      --green: #42e695;
+      --red: #ff4d5f;
+      --purple: #a979ff;
+      --border: rgba(255, 255, 255, 0.14);
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(54, 169, 255, 0.24), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(169, 121, 255, 0.20), transparent 28%),
+        linear-gradient(145deg, #050c1b, var(--bg));
+    }
+
+    .app {
+      width: min(940px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 36px 0 52px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .hero-icon {
+      display: inline-grid;
+      width: 68px;
+      height: 68px;
+      place-items: center;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 212, 77, 0.45);
+      border-radius: 50%;
+      font-size: 34px;
+      background: rgba(255, 212, 77, 0.10);
+      box-shadow: 0 0 32px rgba(255, 212, 77, 0.16);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 0.03em;
+    }
+
+    .subtitle {
+      margin: 10px auto 0;
+      max-width: 620px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .panel {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(16, 38, 73, 0.85);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .controls-panel {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 1.05rem;
+      color: #ffffff;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mode-card {
+      min-height: 128px;
+      padding: 16px;
+      cursor: pointer;
+      color: var(--text);
+      text-align: left;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.045);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .mode-card.selected {
+      border-color: var(--gold);
+      background: rgba(255, 212, 77, 0.13);
+      box-shadow: inset 0 0 0 1px rgba(255, 212, 77, 0.20);
+    }
+
+    .mode-icon {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .mode-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+    }
+
+    .mode-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.35;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      padding: 12px 14px;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      background: #0a1c38;
+      font-size: 1rem;
+    }
+
+    input[type="range"] {
+      accent-color: var(--gold);
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .range-value {
+      display: grid;
+      width: 42px;
+      height: 38px;
+      flex: 0 0 auto;
+      place-items: center;
+      color: #07162d;
+      border-radius: 10px;
+      background: var(--gold);
+      font-weight: 900;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    button {
+      padding: 12px 16px;
+      cursor: pointer;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.96rem;
+      font-weight: 800;
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    .primary {
+      color: #07162d;
+      border-color: transparent;
+      background: var(--gold);
+    }
+
+    .primary:hover:not(:disabled) {
+      background: #ffe076;
+    }
+
+    .danger {
+      border-color: rgba(255, 77, 95, 0.52);
+      background: rgba(255, 77, 95, 0.13);
+    }
+
+    .workout-panel {
+      overflow: hidden;
+      position: relative;
+      min-height: 370px;
+    }
+
+    .workout-panel::before {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+      opacity: 0.72;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(54, 169, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 5% 100%, rgba(255, 212, 77, 0.14), transparent 28%);
+    }
+
+    .workout-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .status-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .status-badge {
+      padding: 7px 10px;
+      color: #07162d;
+      border-radius: 999px;
+      background: var(--green);
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .status-badge.rest {
+      background: var(--blue);
+    }
+
+    .status-badge.paused {
+      background: var(--gold);
+    }
+
+    .status-badge.finished {
+      background: var(--purple);
+    }
+
+    .timer {
+      margin: 25px 0 6px;
+      text-align: center;
+      font-size: clamp(4rem, 14vw, 7.2rem);
+      font-variant-numeric: tabular-nums;
+      font-weight: 900;
+      letter-spacing: -0.055em;
+      line-height: 1;
+    }
+
+    .phase-title {
+      min-height: 32px;
+      margin: 0;
+      color: var(--gold);
+      text-align: center;
+      font-size: clamp(1.35rem, 4vw, 1.95rem);
+    }
+
+    .exercise-name {
+      margin: 20px 0 7px;
+      text-align: center;
+      font-size: clamp(1.45rem, 4.5vw, 2.15rem);
+    }
+
+    .exercise-description {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+    }
+
+    .message {
+      min-height: 28px;
+      margin: 17px auto 0;
+      color: #dce9ff;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .bar-wrap {
+      width: 100%;
+      height: 15px;
+      overflow: hidden;
+      margin-top: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.24);
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width 250ms linear, background 180ms ease;
+    }
+
+    .bar-fill.kaioken {
+      background: linear-gradient(90deg, #ff9a3c, var(--red));
+    }
+
+    .bar-fill.spirit {
+      background: linear-gradient(90deg, #58cfff, #d7aaff, var(--gold));
+    }
+
+    .meters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .meter {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .meter-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .small-bar {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    .small-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: inherit;
+      transition: width 300ms ease;
+    }
+
+    .rival-fill {
+      background: linear-gradient(90deg, #ff7b59, var(--red));
+    }
+
+    .strain-fill {
+      background: linear-gradient(90deg, #ffbf45, var(--red));
+    }
+
+    .spirit-fill {
+      background: linear-gradient(90deg, #59c9ff, #c59aff, var(--gold));
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .small-note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.83rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 720px) {
+      .app {
+        width: min(100% - 22px, 940px);
+        padding-top: 22px;
+      }
+
+      .panel {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .mode-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .settings-grid,
+      .meters {
+        grid-template-columns: 1fr;
+      }
+
+      .mode-card {
+        min-height: 112px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-row button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="hero-icon">🐝</div>
+      <h1>King Kai Training</h1>
+      <p class="subtitle">
+        Choose a Dragon Ball-inspired workout mode, set your training time,
+        and power up one interval at a time.
+      </p>
+    </header>
+
+    <section class="panel controls-panel">
+      <h2 class="section-title">Choose your training mode</h2>
+
+      <div class="mode-grid">
+        <button class="mode-card selected" data-mode="standard" type="button">
+          <span class="mode-icon">💥</span>
+          <strong>Standard</strong>
+          <span>Flexible movement, strength, balance, and conditioning.</span>
+        </button>
+
+        <button class="mode-card" data-mode="boss" type="button">
+          <span class="mode-icon">🏆</span>
+          <strong>Boss Battle</strong>
+          <span>Three escalating waves against a rival challenger.</span>
+        </button>
+
+        <button class="mode-card" data-mode="kaioken" type="button">
+          <span class="mode-icon">🔴</span>
+          <strong>Kaioken</strong>
+          <span>Short explosive bursts, recovery, and strain management.</span>
+        </button>
+
+        <button class="mode-card" data-mode="spirit" type="button">
+          <span class="mode-icon">☀️</span>
+          <strong>Spirit Bomb</strong>
+          <span>Gather energy through calm focus, balance, and control.</span>
+        </button>
+      </div>
+
+      <div class="settings-grid">
+        <div class="field">
+          <label for="duration">Training duration</label>
+          <select id="duration">
+            <option value="1">1 minute</option>
+            <option value="2">2 minutes</option>
+            <option value="3">3 minutes</option>
+            <option value="4">4 minutes</option>
+            <option value="5">5 minutes</option>
+          </select>
+        </div>
+
+        <div class="field" id="intensityField">
+          <label for="intensity">
+            Standard intensity
+          </label>
+
+          <div class="range-row">
+            <input id="intensity" type="range" min="1" max="10" value="5">
+            <output id="intensityValue" class="range-value">5</output>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button id="startButton" class="primary" type="button">Start Training</button>
+        <button id="pauseButton" type="button" disabled>Pause</button>
+        <button id="skipButton" type="button" disabled>Skip Step</button>
+        <button id="resetButton" class="danger" type="button" disabled>Reset</button>
+      </div>
+    </section>
+
+    <section class="panel workout-panel" aria-live="polite">
+      <div class="workout-content">
+        <div class="status-top">
+          <span id="stepCounter">Ready to train</span>
+          <span id="statusBadge" class="status-badge finished">READY</span>
+        </div>
+
+        <div id="timer" class="timer">00:00</div>
+        <h2 id="phaseTitle" class="phase-title">King Kai is waiting.</h2>
+        <h3 id="exerciseName" class="exercise-name">Choose a mode and begin.</h3>
+        <p id="exerciseDescription" class="exercise-description">
+          Select a training style, duration, and—if using Standard mode—an intensity level.
+        </p>
+        <p id="message" class="message">Your energy is ready to rise.</p>
+
+        <div class="bar-wrap" aria-label="Workout progress">
+          <div id="progressFill" class="bar-fill"></div>
+        </div>
+
+        <div class="meters">
+          <div id="rivalMeter" class="meter hidden">
+            <div class="meter-header">
+              <span>Rival's Energy</span>
+              <span id="rivalValue">100%</span>
+            </div>
+            <div class="small-bar">
+              <div id="rivalFill" class="small-fill rival-fill"></div>
+            </div>
+          </div>
+
+          <div id="strainMeter" class="meter hidden">
+            <div class="meter-header">
+              <span>Body Strain</span>
+              <span id="strainValue">0%</span>
+            </div>
+            <div class="small-bar">
+              <div id="strainFill" class="small-fill strain-fill"></div>
+            </div>
+          </div>
+
+          <div id="spiritMeter" class="meter hidden">
+            <div class="meter-header">
+              <span>Spirit Bomb Energy</span>
+              <span id="spiritValue">0%</span>
+            </div>
+            <div class="small-bar">
+              <div id="spiritFill" class="small-fill spirit-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <p id="smallNote" class="small-note">
+          Tip: Keep movements controlled. Stop if you feel pain, dizziness,
+          chest discomfort, or unusual shortness of breath.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const EXERCISES = [
+      {
+        name: "Bumblebee Catch",
+        desc: "Move quickly side to side, dodging imaginary bumblebees for agility."
+      },
+      {
+        name: "Gregory Dodge",
+        desc: "Move around slowly, practicing quick direction changes to dodge Gregory."
+      },
+      {
+        name: "King Kai Push-ups",
+        desc: "Do controlled push-ups to build strength and endurance."
+      },
+      {
+        name: "Energy Focus Breathing",
+        desc: "Practice deep breathing, focusing your energy to calm your mind."
+      },
+      {
+        name: "Speed Jumps",
+        desc: "Jump in place quickly and repeatedly to build explosive power."
+      },
+      {
+        name: "Balance Pose",
+        desc: "Stand on one foot, then switch feet, to improve balance and focus."
+      }
+    ];
+
+    const WAVE_NAMES = [
+      "Wave 1 — Feeling Out the Rival",
+      "Wave 2 — Rival Counterattacks",
+      "Final Wave — Overdrive"
+    ];
+
+    const KAIOKEN_STAGES = [
+      {
+        label: "Kaioken x2",
+        exercise: EXERCISES[0],
+        work: 15,
+        rest: 15,
+        strainGain: 15,
+        message: "Your aura flickers red. Fast feet, but stay controlled!"
+      },
+      {
+        label: "Kaioken x3",
+        exercise: EXERCISES[2],
+        work: 12,
+        rest: 20,
+        strainGain: 25,
+        message: "Power rises. Use clean reps—do not rush your form."
+      },
+      {
+        label: "Kaioken x4",
+        exercise: EXERCISES[4],
+        work: 10,
+        rest: 25,
+        strainGain: 35,
+        message: "Maximum burst! Land softly and stop if your knees cave inward."
+      },
+      {
+        label: "Energy Recovery",
+        exercise: EXERCISES[3],
+        work: 20,
+        rest: 0,
+        strainGain: -30,
+        message: "The red aura fades. Regain control of your breathing."
+      }
+    ];
+
+    const SPIRIT_BOMB_STAGES = [
+      {
+        label: "Gather Energy — Earth",
+        exercise: EXERCISES[3],
+        work: 20,
+        rest: 5,
+        energyGain: 20,
+        message: "Reach out to the people of Earth. Breathe slowly and gather their energy."
+      },
+      {
+        label: "Gather Energy — Nature",
+        exercise: EXERCISES[5],
+        work: 15,
+        rest: 5,
+        energyGain: 15,
+        message: "Stand steady and collect energy from the land, water, and sky."
+      },
+      {
+        label: "Channel the Energy",
+        exercise: EXERCISES[0],
+        work: 15,
+        rest: 10,
+        energyGain: 25,
+        message: "Move lightly and keep the energy sphere stable above you."
+      },
+      {
+        label: "Spirit Bomb Charge",
+        exercise: EXERCISES[2],
+        work: 12,
+        rest: 10,
+        energyGain: 30,
+        message: "Use controlled strength to hold the growing Spirit Bomb in place."
+      }
+    ];
+
+    const modeButtons = document.querySelectorAll(".mode-card");
+    const durationSelect = document.getElementById("duration");
+    const intensityInput = document.getElementById("intensity");
+    const intensityValue = document.getElementById("intensityValue");
+    const intensityField = document.getElementById("intensityField");
+
+    const startButton = document.getElementById("startButton");
+    const pauseButton = document.getElementById("pauseButton");
+    const skipButton = document.getElementById("skipButton");
+    const resetButton = document.getElementById("resetButton");
+
+    const stepCounter = document.getElementById("stepCounter");
+    const statusBadge = document.getElementById("statusBadge");
+    const timer = document.getElementById("timer");
+    const phaseTitle = document.getElementById("phaseTitle");
+    const exerciseName = document.getElementById("exerciseName");
+    const exerciseDescription = document.getElementById("exerciseDescription");
+    const message = document.getElementById("message");
+    const progressFill = document.getElementById("progressFill");
+    const smallNote = document.getElementById("smallNote");
+
+    const rivalMeter = document.getElementById("rivalMeter");
+    const rivalValue = document.getElementById("rivalValue");
+    const rivalFill = document.getElementById("rivalFill");
+
+    const strainMeter = document.getElementById("strainMeter");
+    const strainValue = document.getElementById("strainValue");
+    const strainFill = document.getElementById("strainFill");
+
+    const spiritMeter = document.getElementById("spiritMeter");
+    const spiritValue = document.getElementById("spiritValue");
+    const spiritFill = document.getElementById("spiritFill");
+
+    let selectedMode = "standard";
+    let plan = [];
+    let currentStepIndex = 0;
+    let currentPhase = "work";
+    let secondsLeft = 0;
+    let phaseDuration = 0;
+    let intervalId = null;
+    let paused = false;
+    let sessionStarted = false;
+    let strain = 0;
+    let spiritEnergy = 0;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function formatTime(totalSeconds) {
+      const safeSeconds = Math.max(0, totalSeconds);
+      const minutes = Math.floor(safeSeconds / 60);
+      const seconds = safeSeconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function setBadge(text, type) {
+      statusBadge.textContent = text;
+      statusBadge.className = `status-badge ${type}`;
+    }
+
+    function setMeter(fillElement, valueElement, value) {
+      const safeValue = clamp(Math.round(value), 0, 100);
+      fillElement.style.width = `${safeValue}%`;
+      valueElement.textContent = `${safeValue}%`;
+    }
+
+    function clearMeters() {
+      rivalMeter.classList.add("hidden");
+      strainMeter.classList.add("hidden");
+      spiritMeter.classList.add("hidden");
+    }
+
+    function updateModeUI() {
+      modeButtons.forEach((button) => {
+        button.classList.toggle("selected", button.dataset.mode === selectedMode);
+      });
+
+      intensityField.classList.toggle("hidden", selectedMode !== "standard");
+    }
+
+    function setControlsRunning(isRunning) {
+      startButton.disabled = isRunning;
+      pauseButton.disabled = !isRunning;
+      skipButton.disabled = !isRunning;
+      resetButton.disabled = !isRunning;
+    }
+
+    function buildStandardPlan(durationMinutes, intensity) {
+      let chosen;
+
+      if (intensity <= 3) {
+        chosen = [EXERCISES[1], EXERCISES[3], EXERCISES[5]];
+      } else if (intensity <= 7) {
+        chosen = [EXERCISES[0], EXERCISES[2], EXERCISES[4]];
+      } else {
+        chosen = [...EXERCISES];
+      }
+
+      const totalSeconds = durationMinutes * 60;
+      const restFraction = 0.28 - (intensity - 1) * (0.20 / 9);
+      const restSlots = chosen.length - 1;
+      const restTime = clamp(
+        Math.floor((totalSeconds * restFraction) / restSlots),
+        3,
+        15
+      );
+
+      const workTotal = totalSeconds - restTime * restSlots;
+      const baseWork = Math.floor(workTotal / chosen.length);
+      let remainder = workTotal % chosen.length;
+
+      return chosen.map((exercise, index) => {
+        const extraSecond = remainder > 0 ? 1 : 0;
+        remainder -= extraSecond;
+
+        return {
+          name: exercise.name,
+          desc: exercise.desc,
+          workTime: Math.max(8, baseWork + extraSecond),
+          restTime: index < chosen.length - 1 ? restTime : 0,
+          label: `Standard Training — Intensity ${intensity}`,
+          message: "Stay smooth, focused, and in control of your energy."
+        };
+      });
+    }
+
+    function buildBossPlan(durationMinutes) {
+      const totalSeconds = durationMinutes * 60;
+      const baseWaveTime = Math.floor(totalSeconds / 3);
+      let remainder = totalSeconds % 3;
+
+      const waveExercises = [EXERCISES[0], EXERCISES[2], EXERCISES[4]];
+      const waveIntensities = [3, 6, 10];
+
+      return waveExercises.map((exercise, index) => {
+        const waveTime = baseWaveTime + (remainder > 0 ? 1 : 0);
+        remainder -= remainder > 0 ? 1 : 0;
+
+        const isLastWave = index === waveExercises.length - 1;
+        const restFraction = 0.28 - (waveIntensities[index] - 1) * (0.20 / 9);
+        const restTime = isLastWave
+          ? 0
+          : clamp(Math.floor(waveTime * restFraction), 3, 12);
+
+        return {
+          name: exercise.name,
+          desc: exercise.desc,
+          workTime: Math.max(8, waveTime - restTime),
+          restTime,
+          label: WAVE_NAMES[index],
+          message: "The rival is pressuring you. Keep your movement controlled.",
+          rivalStart: Math.round(100 * (3 - index) / 3),
+          rivalEnd: Math.round(100 * (2 - index) / 3)
+        };
+      });
+    }
+
+    function buildRepeatingPlan(durationMinutes, stages, type) {
+      const totalSeconds = durationMinutes * 60;
+      const result = [];
+      let elapsed = 0;
+      let stageIndex = 0;
+
+      while (elapsed < totalSeconds) {
+        const stage = stages[stageIndex % stages.length];
+        const remainingForWork = totalSeconds - elapsed;
+        const workTime = Math.min(stage.work, remainingForWork);
+        elapsed += workTime;
+
+        let restTime = 0;
+
+        if (elapsed < totalSeconds && stage.rest > 0) {
+          const remainingForRest = totalSeconds - elapsed;
+          restTime = Math.min(stage.rest, remainingForRest);
+          elapsed += restTime;
+        }
+
+        result.push({
+          name: stage.exercise.name,
+          desc: stage.exercise.desc,
+          workTime,
+          restTime,
+          label: stage.label,
+          message: stage.message,
+          type,
+          strainGain: stage.strainGain || 0,
+          energyGain: stage.energyGain || 0
+        });
+
+        stageIndex += 1;
+      }
+
+      return result;
+    }
+
+    function buildPlan() {
+      const durationMinutes = Number(durationSelect.value);
+      const intensity = Number(intensityInput.value);
+
+      if (selectedMode === "standard") {
+        return buildStandardPlan(durationMinutes, intensity);
+      }
+
+      if (selectedMode === "boss") {
+        return buildBossPlan(durationMinutes);
+      }
+
+      if (selectedMode === "kaioken") {
+        return buildRepeatingPlan(durationMinutes, KAIOKEN_STAGES, "kaioken");
+      }
+
+      return buildRepeatingPlan(durationMinutes, SPIRIT_BOMB_STAGES, "spirit");
+    }
+
+    function showCurrentStep() {
+      const step = plan[currentStepIndex];
+
+      if (!step) {
+        finishWorkout();
+        return;
+      }
+
+      currentPhase = "work";
+      phaseDuration = step.workTime;
+      secondsLeft = step.workTime;
+
+      stepCounter.textContent = `Stage ${currentStepIndex + 1} of ${plan.length}`;
+      phaseTitle.textContent = step.label;
+      exerciseName.textContent = step.name;
+      exerciseDescription.textContent = step.desc;
+      message.textContent = step.message;
+
+      progressFill.className = "bar-fill";
+
+      if (selectedMode === "kaioken") {
+        progressFill.classList.add("kaioken");
+      }
+
+      if (selectedMode === "spirit") {
+        progressFill.classList.add("spirit");
+      }
+
+      if (selectedMode === "boss") {
+        rivalMeter.classList.remove("hidden");
+        setMeter(rivalFill, rivalValue, step.rivalStart);
+      }
+
+      if (selectedMode === "kaioken") {
+        strainMeter.classList.remove("hidden");
+
+        strain = clamp(strain + step.strainGain, 0, 100);
+        setMeter(strainFill, strainValue, strain);
+      }
+
+      if (selectedMode === "spirit") {
+        spiritMeter.classList.remove("hidden");
+
+        spiritEnergy = clamp(spiritEnergy + step.energyGain, 0, 100);
+        setMeter(spiritFill, spiritValue, spiritEnergy);
+      }
+
+      setBadge("WORK", "work");
+      renderTimerAndProgress();
+    }
+
+    function renderTimerAndProgress() {
+      timer.textContent = formatTime(secondsLeft);
+
+      if (phaseDuration <= 0) {
+        progressFill.style.width = "0%";
+        return;
+      }
+
+      const percent = ((phaseDuration - secondsLeft) / phaseDuration) * 100;
+      progressFill.style.width = `${clamp(percent, 0, 100)}%`;
+    }
+
+    function startRest() {
+      const step = plan[currentStepIndex];
+
+      if (!step || step.restTime <= 0) {
+        advanceStep();
+        return;
+      }
+
+      currentPhase = "rest";
+      phaseDuration = step.restTime;
+      secondsLeft = step.restTime;
+
+      phaseTitle.textContent = "Recovery Phase";
+      exerciseName.textContent = "Rest and Regain Energy";
+      exerciseDescription.textContent =
+        "Breathe steadily, reset your form, and prepare for the next stage.";
+      message.textContent =
+        selectedMode === "kaioken"
+          ? "Power down before the next burst."
+          : selectedMode === "spirit"
+            ? "Hold the energy sphere steady and stay calm."
+            : "Recover with control—your next move is coming.";
+
+      setBadge("REST", "rest");
+      renderTimerAndProgress();
+    }
+
+    function advanceStep() {
+      currentStepIndex += 1;
+
+      if (currentStepIndex >= plan.length) {
+        finishWorkout();
+        return;
+      }
+
+      showCurrentStep();
+    }
+
+    function tick() {
+      if (paused || !sessionStarted) {
+        return;
+      }
+
+      secondsLeft -= 1;
+
+      if (selectedMode === "boss" && currentPhase === "work") {
+        const step = plan[currentStepIndex];
+        const elapsedInPhase = phaseDuration - Math.max(0, secondsLeft);
+        const phaseProgress = elapsedInPhase / phaseDuration;
+        const currentRivalEnergy =
+          step.rivalStart - (step.rivalStart - step.rivalEnd) * phaseProgress;
+
+        setMeter(rivalFill, rivalValue, currentRivalEnergy);
+      }
+
+      renderTimerAndProgress();
+
+      if (secondsLeft <= 0) {
+        if (currentPhase === "work") {
+          startRest();
+        } else {
+          advanceStep();
+        }
+      }
+    }
+
+    function startWorkout() {
+      clearInterval(intervalId);
+
+      plan = buildPlan();
+      currentStepIndex = 0;
+      currentPhase = "work";
+      paused = false;
+      sessionStarted = true;
+      strain = 0;
+      spiritEnergy = 0;
+
+      clearMeters();
+
+      if (selectedMode === "boss") {
+        rivalMeter.classList.remove("hidden");
+        setMeter(rivalFill, rivalValue, 100);
+      }
+
+      if (selectedMode === "kaioken") {
+        strainMeter.classList.remove("hidden");
+        setMeter(strainFill, strainValue, 0);
+        smallNote.textContent =
+          "Kaioken reminder: use controlled form. Stop for pain, dizziness, chest discomfort, or unusual shortness of breath.";
+      } else if (selectedMode === "spirit") {
+        spiritMeter.classList.remove("hidden");
+        setMeter(spiritFill, spiritValue, 0);
+        smallNote.textContent =
+          "Spirit Bomb mode emphasizes calm breathing, balance, controlled movement, and focus.";
+      } else if (selectedMode === "boss") {
+        smallNote.textContent =
+          "Three waves are coming. Pace yourself early so you can finish the Overdrive round strongly.";
+      } else {
+        smallNote.textContent =
+          "Move with control. Quality reps and good balance matter more than rushing.";
+      }
+
+      setControlsRunning(true);
+      pauseButton.textContent = "Pause";
+
+      showCurrentStep();
+      intervalId = setInterval(tick, 1000);
+    }
+
+    function togglePause() {
+      if (!sessionStarted) {
+        return;
+      }
+
+      paused = !paused;
+
+      if (paused) {
+        setBadge("PAUSED", "paused");
+        pauseButton.textContent = "Resume";
+        message.textContent = "Training paused. Catch your breath when you need it.";
+      } else {
+        pauseButton.textContent = "Pause";
+
+        if (currentPhase === "work") {
+          setBadge("WORK", "work");
+        } else {
+          setBadge("REST", "rest");
+        }
+
+        const step = plan[currentStepIndex];
+        message.textContent =
+          currentPhase === "work"
+            ? step.message
+            : "Recover with control—your next move is coming.";
+      }
+    }
+
+    function skipCurrentPhase() {
+      if (!sessionStarted) {
+        return;
+      }
+
+      secondsLeft = 0;
+
+      if (currentPhase === "work") {
+        startRest();
+      } else {
+        advanceStep();
+      }
+    }
+
+    function finishWorkout() {
+      clearInterval(intervalId);
+      intervalId = null;
+      sessionStarted = false;
+      paused = false;
+
+      setControlsRunning(false);
+      resetButton.disabled = false;
+
+      timer.textContent = "00:00";
+      progressFill.style.width = "100%";
+      stepCounter.textContent = "Training complete";
+      setBadge("COMPLETE", "finished");
+
+      if (selectedMode === "boss") {
+        setMeter(rivalFill, rivalValue, 0);
+        phaseTitle.textContent = "Rival Defeated!";
+        exerciseName.textContent = "All Three Waves Cleared 🏆";
+        exerciseDescription.textContent =
+          "You survived the rival's pressure and finished the final Overdrive wave.";
+        message.textContent = "King Kai approves of your fighting spirit.";
+      } else if (selectedMode === "kaioken") {
+        phaseTitle.textContent = "Kaioken Released";
+        exerciseName.textContent = "Energy Stabilizing 🔴";
+        exerciseDescription.textContent =
+          "Your interval work is complete. Take a few slow breaths and cool down.";
+        message.textContent = `Final body strain: ${strain}%. Controlled recovery is part of becoming stronger.`;
+      } else if (selectedMode === "spirit") {
+        phaseTitle.textContent =
+          spiritEnergy >= 100 ? "Spirit Bomb Complete!" : "Spirit Bomb Training Complete";
+        exerciseName.textContent =
+          spiritEnergy >= 100
+            ? "The Spirit Bomb Is Fully Formed ☀️"
+            : `Spirit Bomb Charge: ${spiritEnergy}%`;
+        exerciseDescription.textContent =
+          spiritEnergy >= 100
+            ? "Raise your hands, take one calm breath, and imagine releasing the energy safely."
+            : "Good focus. Choose a longer session next time to gather even more energy.";
+        message.textContent = "Your energy control and patience improved.";
+      } else {
+        phaseTitle.textContent = "King Kai Training Complete";
+        exerciseName.textContent = "Great Job! 💥";
+        exerciseDescription.textContent =
+          "You completed your session. Stay consistent and your energy, strength, and control will grow.";
+        message.textContent = "Recover, hydrate, and come back stronger.";
+      }
+    }
+
+    function resetWorkout() {
+      clearInterval(intervalId);
+      intervalId = null;
+      plan = [];
+      currentStepIndex = 0;
+      currentPhase = "work";
+      secondsLeft = 0;
+      phaseDuration = 0;
+      paused = false;
+      sessionStarted = false;
+      strain = 0;
+      spiritEnergy = 0;
+
+      clearMeters();
+      progressFill.className = "bar-fill";
+      progressFill.style.width = "0%";
+
+      timer.textContent = "00:00";
+      stepCounter.textContent = "Ready to train";
+      phaseTitle.textContent = "King Kai is waiting.";
+      exerciseName.textContent = "Choose a mode and begin.";
+      exerciseDescription.textContent =
+        "Select a training style, duration, and—if using Standard mode—an intensity level.";
+      message.textContent = "Your energy is ready to rise.";
+      smallNote.textContent =
+        "Tip: Keep movements controlled. Stop if you feel pain, dizziness, chest discomfort, or unusual shortness of breath.";
+
+      setBadge("READY", "finished");
+
+      startButton.disabled = false;
+      pauseButton.disabled = true;
+      skipButton.disabled = true;
+      resetButton.disabled = true;
+      pauseButton.textContent = "Pause";
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (sessionStarted) {
+          return;
+        }
+
+        selectedMode = button.dataset.mode;
+        updateModeUI();
+      });
+    });
+
+    intensityInput.addEventListener("input", () => {
+      intensityValue.textContent = intensityInput.value;
+    });
+
+    startButton.addEventListener("click", startWorkout);
+    pauseButton.addEventListener("click", togglePause);
+    skipButton.addEventListener("click", skipCurrentPhase);
+    resetButton.addEventListener("click", resetWorkout);
+
+    updateModeUI();
+    resetWorkout();
+  </script>
+</body>
+</html>
